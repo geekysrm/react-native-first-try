@@ -1,29 +1,25 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableHighlight } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { StyleSheet, View, Text } from "react-native";
+const people = [
+  { name: "Soumya", age: 23 },
+  { name: "Ashish", age: 24 },
+  { name: "Sambit", age: 25 }
+];
 
 export default class App extends Component {
-  onPress = () => {
-    alert("Button pressed");
+  renderItems() {
+    return people.map(this.renderItem);
+  }
+
+  renderItem = (person, index) => {
+    return (
+      <Text key={index} style={styles.text}>
+        {person.name} is {person.age}
+      </Text>
+    );
   };
   render() {
-    return (
-      <View style={styles.container}>
-        {/* <View style={[styles.box, { backgroundColor: "red" }]} />
-        <View style={[styles.box, { backgroundColor: "green" }]} />
-    <View style={[styles.box, { backgroundColor: "blue" }]} /> */}
-        <TouchableHighlight
-          underlayColor="rgba(50,183,255,0.8)"
-          onPress={this.onPress}
-          style={styles.button}
-        >
-          <View style={styles.textContainer}>
-            <Icon name="home" size={20} color="white" />
-            <Text style={styles.text}>HOME</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-    );
+    return <View style={styles.container}>{this.renderItems()}</View>;
   }
 }
 
@@ -37,24 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
     //alignItems: "center"
   },
-  // box: {
-  //   flex: 1, //fill up inside parent equally
-  //   margin: 10
-  // }
-  button: {
-    backgroundColor: "rgba(50,183,255,1)",
-    borderRadius: 30,
-    padding: 17,
-    margin: 10
-  },
-  textContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row"
-  },
   text: {
-    color: "white",
-    fontSize: 18,
-    marginLeft: 9
+    fontSize: 22
   }
 });
