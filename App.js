@@ -1,29 +1,58 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
-const people = [
-  { name: "Soumya", age: 23 },
-  { name: "Ashish", age: 24 },
-  { name: "Sambit", age: 25 }
-];
+import { StyleSheet, View, Text, FlatList } from "react-native";
 
 export default class App extends Component {
-  renderItems() {}
-
-  renderItem = (person, index) => {
+  state = { people: [], refreshing: false, page: 1 };
+  componentDidMount() {
+    this.fetchData();
+  }
+  fetchData = async () => {
+    this.setState({ refreshing: true });
+    try {
+      const data = await fetch(
+        `https://swapi.co/api/people?page=${this.state.page}`
+      );
+      const json = await data.json(); //converts above promise to json
+      this.setState({
+        people: json.results,
+        page: this.state.page + 1,
+        refreshing: false
+      });
+    } catch (err) {
+      console.log("error fetching data");
+    }
+  };
+  renderItem = ({ item }) => {
     return (
-      <Text key={index} style={styles.text}>
-        {person.name} is {person.age}
-      </Text>
+      <View
+        style={{ padding: 15, borderBottomColor: "#ddd", borderBottomWidth: 1 }}
+      >
+        <Text style={{ fontSize: 20 }}>{item.name}</Text>
+        <Text style={{ color: "rgba(0,0,0,.4)" }}>Gender: {item.gender}</Text>
+      </View>
     );
   };
   render() {
-    const peopleList = people.map(this.renderItem); //peopleList is an array now
-    return <View style={styles.container}>{peopleList}</View>;
+    return (
+      <View style={styles.container}>
+        <Text>People:</Text>
+        <FlatList
+          onRefresh={this.fetchData}
+          refreshing={this.state.refreshing}
+          data={this.state.people}
+          keyExtractor={item => item.name}
+          renderItem={
+            this.renderItem //extracts keys for the list
+          }
+        />
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingVertical: 14,
     flex: 1, //this is the most parent container, so fill the entire screen
     // don't have to write display:flex
     // flexDirection: "row", //primary axis -> row (y-axis)
