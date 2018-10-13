@@ -7,9 +7,7 @@ const people = [
 ];
 
 export default class App extends Component {
-  renderItems() {
-    return people.map(this.renderItem);
-  }
+  renderItems() {}
 
   renderItem = (person, index) => {
     return (
@@ -19,7 +17,8 @@ export default class App extends Component {
     );
   };
   render() {
-    return <View style={styles.container}>{this.renderItems()}</View>;
+    const peopleList = people.map(this.renderItem); //peopleList is an array now
+    return <View style={styles.container}>{peopleList}</View>;
   }
 }
 
